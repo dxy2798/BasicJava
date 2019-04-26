@@ -67,7 +67,7 @@ public class JDBCTest {
 		 sql = "SELECT flow_id flowid,type,id_card idCard," 
 				+ "exam_card examCard,student_name studentName,"
 				+"location,grade " + "FROM examstudent WHERE flow_id = ?";
-		Student stu = get(Student.class, sql, 2);
+		Student stu = get(Student.class, sql, 1);
 		System.out.println(stu);
 	}
 	/**
