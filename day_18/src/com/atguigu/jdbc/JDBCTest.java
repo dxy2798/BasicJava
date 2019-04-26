@@ -170,6 +170,6 @@ public class JDBCTest {
 	public void testGetConnection() throws Exception{
 		System.out.print(getConnection());
 	}
-	}
+}
 
 

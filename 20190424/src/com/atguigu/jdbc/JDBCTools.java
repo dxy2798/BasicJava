@@ -1,4 +1,4 @@
-package Dao;
+package com.atguigu.jdbc;
 
 import static org.hamcrest.CoreMatchers.nullValue;
 
@@ -11,8 +11,6 @@ import java.sql.Statement;
 import java.time.Year;
 import java.util.Properties;
 import org.junit.Test;
-
-import Tool.formatString;
 
 /**
  * 操作 JDBC 的工具类。其中封装了一些工具方法.
@@ -34,7 +32,7 @@ public class JDBCTools {
 		String password = null;
 		//读取类路径下的 jdbc.properties
 		InputStream in = 
-				JDBCTools.class.getClassLoader().getResourceAsStream("jdbc3.properties");
+				JDBCTools.class.getClassLoader().getResourceAsStream("jdbc2.properties");
 				
 		Properties properties = new Properties();
 		properties.load(in);
@@ -44,10 +42,10 @@ public class JDBCTools {
 		user = properties.getProperty("user");
 		password = properties.getProperty("password");
 
-		
 		Class.forName(driverClass);
 		
 		Connection conn = (Connection) DriverManager.getConnection(jdbcUrl, user, password);
+
 		return conn;
 	}
 	
@@ -166,11 +164,6 @@ public class JDBCTools {
 		}finally{
 			JDBCTools.releaseSource(preparedStatement, connection);
 		}
-	}
-	
-	@Test
-	public void testJunit(){
-		System.out.print("!!!");
 	}
 	
 }
