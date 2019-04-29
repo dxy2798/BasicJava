@@ -59,16 +59,20 @@ public class JDBCTest {
 	 */
 	@Test
 	public void testGet(){
-		String sql = "SELECT id,name,email,birth from customers "
-				+ "WHERE id = ?";
-		Customer customer = get(Customer.class, sql, 1);
+		String sql = "SELECT id,name,email,birth FROM ajax.customers WHERE id = ?";
+		Customer customer = DAO.get(Customer.class, sql, 1);
 		System.out.println(customer); 
+
+//		String sql = "SELECT id,name,email,birth FROM ajax.customers WHERE id = ?";
+//		Customer customer = DAO.get(Customer.class, sql, 1);
+//		System.out.println(customer);
 		
-		 sql = "SELECT flow_id flowid,type,id_card idCard," 
-				+ "exam_card examCard,student_name studentName,"
-				+"location,grade " + "FROM examstudent WHERE flow_id = ?";
-		Student stu = get(Student.class, sql, 1);
-		System.out.println(stu);
+//		String sql = "SELECT flow_id flowid,type,id_card idCard," 
+//				+ "exam_card examCard,student_name studentName,"
+//				+"location,grade " + "FROM examstudent WHERE flow_id = ?";
+//		Student stu = DAO.get(Student.class, sql, 1);
+//		System.out.println(stu);
+
 	}
 	/**
 	 * 通用查询方法,可以根据传入的 SQL、Class 对象返回的 SQL 对应的记录的对象
