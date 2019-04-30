@@ -74,7 +74,7 @@ public class Student {
 	@Override
 	public String toString() {
 		return "Student [flowid=" + flowid + ", type=" + type + ", idCard=" + idCard + ", examCard=" + examCard
-				+ ", studentName=" + studentName + ", location=" + location + ", grade=" + grade + "]";
+				+ ", studentName=" + studentName + ", location=" + location + ", grade=" + grade + "]\n";
 	}
 
 	

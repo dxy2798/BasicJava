@@ -46,51 +46,56 @@ public class DAO {
 	 * @param args
 	 * @return
 	 */
-	public static <T> T get(Class<T> clazz,String sql,Object ... args){
+	public <T> T get(Class<T> clazz,String sql,Object ... args){
 		
-		T entity = null;
-		
-		Connection connection = null;
-		PreparedStatement preparedStatement = null;
-		ResultSet resultSet = null;
-		
-		try{
-			connection = JDBCTools.getConnection();
-			preparedStatement = connection.prepareStatement(sql);
-			for(int i = 0;i<args.length;i++){
-				preparedStatement.setObject(i + 1, args[i]);
-			}
-			
-			resultSet = preparedStatement.executeQuery();
-
-			
-			if(resultSet.next()){
-				Map<String, Object> values = new HashMap<String, Object>();
-				ResultSetMetaData rsmd = resultSet.getMetaData();
-				
-				int columnCount = rsmd.getColumnCount();
-				
-				for(int i = 0;i < columnCount;i++){
-					String columnLabel = rsmd.getColumnLabel(i + 1);
-					Object columnValue = resultSet.getObject(columnLabel);
-					values.put(columnLabel, columnValue);
-				}
-				entity= clazz.newInstance();
-				
-				for(Map.Entry<String, Object> entry: values.entrySet()){
-					String fieldName = entry.getKey();
-					Object fieldValue = entry.getValue();
-					//ReflectionUtils.setFieldValue(entity, fieldName, fieldValue);
-					BeanUtils.setProperty(entity, fieldName, fieldValue);
-				}
-			}
-			
-		}catch(Exception e){
-			e.printStackTrace();
-		}finally{
-			JDBCTools.release(resultSet, preparedStatement, connection);
+		List <T> result = getForList(clazz,sql,args);
+		if(result.size() > 0){
+			return result.get(0);
 		}
-		return entity;
+		return null;
+//		T entity = null;
+//		
+//		Connection connection = null;
+//		PreparedStatement preparedStatement = null;
+//		ResultSet resultSet = null;
+//		
+//		try{
+//			connection = JDBCTools.getConnection();
+//			preparedStatement = connection.prepareStatement(sql);
+//			for(int i = 0;i<args.length;i++){
+//				preparedStatement.setObject(i + 1, args[i]);
+//			}
+//			
+//			resultSet = preparedStatement.executeQuery();
+//
+//			
+//			if(resultSet.next()){
+//				Map<String, Object> values = new HashMap<String, Object>();
+//				ResultSetMetaData rsmd = resultSet.getMetaData();
+//				
+//				int columnCount = rsmd.getColumnCount();
+//				
+//				for(int i = 0;i < columnCount;i++){
+//					String columnLabel = rsmd.getColumnLabel(i + 1);
+//					Object columnValue = resultSet.getObject(columnLabel);
+//					values.put(columnLabel, columnValue);
+//				}
+//				entity= clazz.newInstance();
+//				
+//				for(Map.Entry<String, Object> entry: values.entrySet()){
+//					String fieldName = entry.getKey();
+//					Object fieldValue = entry.getValue();
+//					//ReflectionUtils.setFieldValue(entity, fieldName, fieldValue);
+//					BeanUtils.setProperty(entity, fieldName, fieldValue);
+//				}
+//			}
+//			
+//		}catch(Exception e){
+//			e.printStackTrace();
+//		}finally{
+//			JDBCTools.release(resultSet, preparedStatement, connection);
+//		}
+//		return entity;
 	}
 	
 	
@@ -203,7 +208,29 @@ public class DAO {
 	
 	
 	//返回某条记录的某个字段的值 或 一个统计的值(一共有多少记录等)
-	public <F> F getForValue(String sql,Object ... args){
+	public <E> E getForValue(String sql,Object ... args){
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+		
+		try{
+			//1. 得到结果集: 该结果集应该只有一行, 且只有一列
+			connection = JDBCTools.getConnection();
+			preparedStatement = connection.prepareStatement(sql);
+			for(int i = 0; i < args.length; i++){
+				preparedStatement.setObject(i + 1, args[i]);
+			}
+			resultSet = preparedStatement.executeQuery();
+			
+			if(resultSet.next()){
+				return (E) resultSet.getObject(1);
+			}
+
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			JDBCTools.release(resultSet, preparedStatement, connection);
+		}
 		
 		return null;
 	}

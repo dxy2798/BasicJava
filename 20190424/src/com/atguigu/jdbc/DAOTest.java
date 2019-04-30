@@ -39,7 +39,9 @@ public class DAOTest {
 
 	@Test
 	public void testGetForValue() {
-		fail("Not yet implemented");
+		 String sql = "SELECT count(id) FROM ajax.customers";
+		 long id_Count = dao.getForValue(sql);
+		 System.out.println(id_Count);
 	}
 
 }
