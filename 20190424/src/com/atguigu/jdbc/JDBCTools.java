@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Connection;
 import java.sql.Statement;
 import java.time.Year;
@@ -145,7 +146,7 @@ public class JDBCTools {
 	}
 	
 	/**
-	 * update 方法的重载，使用 PreparedStatement
+	 * 6.update 方法的重载，使用 PreparedStatement
 	 * @param sql
 	 * @param args 可变参数
 	 */
@@ -166,4 +167,42 @@ public class JDBCTools {
 		}
 	}
 	
+	/**
+	 * 7. 处理数据库事务的
+	 */
+	public static void commit(Connection connection){
+		if(connection != null){
+			try {
+				connection.commit();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	/**
+	 * 8.回滚事务的
+	 */
+	public static void rollback(Connection connection){
+		if(connection != null){
+			try {
+				connection.rollback();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	/**
+	 * 9.开始事务的
+	 */
+	public static void beginTx(Connection connection){
+		if(connection != null){
+			try {
+				connection.setAutoCommit(false);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 }

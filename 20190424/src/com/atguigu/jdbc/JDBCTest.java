@@ -5,6 +5,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
+import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -12,6 +13,38 @@ import java.util.Scanner;
 import org.junit.Test;
 
 public class JDBCTest {
+	DAO dao = new DAO();
+	
+	/**
+	 * 取得数据库自动生成的主键
+	 */
+	@Test
+	public void testGetKeyValue() {
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		
+		try{
+			String sql = "INSERT INTO ajax.customers(name,email,birth) VALUE(?,?,?)";
+			connection = JDBCTools.getConnection();
+			preparedStatement = connection.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
+			preparedStatement.setString(1, "234561");
+			preparedStatement.setString(2, "234561@163.com");
+			preparedStatement.setDate(3, new Date(new java.util.Date().getTime()));
+			
+			preparedStatement.executeUpdate();
+			
+			ResultSet rs = preparedStatement.getGeneratedKeys();
+			if(rs.next()){
+				System.out.println(rs.getObject(1));
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			JDBCTools.releaseSource(preparedStatement, connection);
+		}
+
+	}
+	
 	
 	@Test
 	public void testResultSetMetaData(){
@@ -59,19 +92,19 @@ public class JDBCTest {
 	 */
 	@Test
 	public void testGet(){
-		String sql = "SELECT id,name,email,birth FROM ajax.customers WHERE id = ?";
-		Customer customer = DAO.get(Customer.class, sql, 1);
-		System.out.println(customer); 
+//		String sql = "SELECT id,name,email,birth FROM ajax.customers WHERE id = ?";
+//		Customer customer = DAO.get(Customer.class, sql, 1);
+//		System.out.println(customer); 
 
 //		String sql = "SELECT id,name,email,birth FROM ajax.customers WHERE id = ?";
 //		Customer customer = DAO.get(Customer.class, sql, 1);
 //		System.out.println(customer);
 		
-//		String sql = "SELECT flow_id flowid,type,id_card idCard," 
-//				+ "exam_card examCard,student_name studentName,"
-//				+"location,grade " + "FROM examstudent WHERE flow_id = ?";
-//		Student stu = DAO.get(Student.class, sql, 1);
-//		System.out.println(stu);
+		String sql = "SELECT flow_id flowid,type,id_card idCard," 
+				+ "exam_card examCard,student_name studentName,"
+				+"location,grade " + "FROM examstudent WHERE flow_id = ?";
+		Student stu = dao.get(Student.class, sql, 1);
+		System.out.println(stu);
 
 	}
 	/**
