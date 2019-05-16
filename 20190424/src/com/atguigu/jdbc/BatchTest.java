@@ -11,6 +11,46 @@ import javax.swing.text.html.HTMLDocument.HTMLReader.ParagraphAction;
 import org.junit.Test;
 
 public class BatchTest {
+	
+	/**
+	 * 测试Statement能否使用Batch
+	 */
+	@Test
+	public void testBatchStatement() {
+		
+		Connection connection = null;
+		Statement statement = null;
+		
+		try{
+			connection = JDBCTools.getConnection();
+			JDBCTools.beginTx(connection);
+			statement = connection.createStatement();
+			long begin = System.currentTimeMillis();
+			for(int i=0;i<10000;i++){
+				String sql = "INSERT INTO ajax.custormer(id,name,email) "
+						+ "VALUE(" + (i+1) + ",'name_" + i + "','@163.com')";
+				statement.addBatch(sql);
+				if(i % 300 == 0){
+					statement.executeBatch();
+					statement.clearBatch();
+				}
+			}
+			if(10000 % 300 != 0){
+				statement.executeBatch();
+				statement.clearBatch();
+			}
+			
+			JDBCTools.commit(connection);
+			long end = System.currentTimeMillis();
+			System.out.println("Time: " + (end - begin));  //Time: 12605
+		}catch(Exception e){
+			e.printStackTrace();
+			JDBCTools.rollback(connection);
+		}finally{
+			JDBCTools.releaseSource(statement, connection);
+		}
+	}
+	
 
 	/**
 	 * 1. 使用 Statemet
@@ -26,14 +66,14 @@ public class BatchTest {
 			JDBCTools.beginTx(connection);
 			statement = connection.createStatement();
 			long begin = System.currentTimeMillis();
-			for(int i=0;i<100000;i++){
+			for(int i=0;i<10000;i++){
 				String sql = "INSERT INTO ajax.custormer(id,name,email) "
 						+ "VALUE(" + (i+1) + ",'name_" + i + "','@163.com')";
 				statement.executeUpdate(sql);
 			}
 			JDBCTools.commit(connection);
 			long end = System.currentTimeMillis();
-			System.out.println("Time: " + (end - begin));
+			System.out.println("Time: " + (end - begin)); //Time: 11769
 		}catch(Exception e){
 			e.printStackTrace();
 			JDBCTools.rollback(connection);
@@ -56,7 +96,7 @@ public class BatchTest {
 			JDBCTools.beginTx(connection);
 			preparedStatement = connection.prepareStatement(sql);
 			long begin = System.currentTimeMillis();
-			for(int i = 0;i < 100000; i++){
+			for(int i = 0;i < 10000; i++){
 				
 				preparedStatement.setInt(1, i + 1);
 				preparedStatement.setString(2, "name_" + i);
@@ -65,7 +105,7 @@ public class BatchTest {
 			}
 			JDBCTools.commit(connection);
 			long end = System.currentTimeMillis();
-			System.out.println("Time: " + (end - begin));
+			System.out.println("Time: " + (end - begin)); //Time: 11662
 		}catch(Exception e){
 			e.printStackTrace();
 			JDBCTools.rollback(connection);
@@ -91,7 +131,7 @@ public class BatchTest {
 			//Date date = new Date(new java.util.Date().getTime());
 			
 			long begin = System.currentTimeMillis();
-			for(int i = 0; i < 100000; i++){
+			for(int i = 0; i < 10000; i++){
 				preparedStatement.setInt(1, i + 1);
 				preparedStatement.setString(2, "name_" + i);
 				preparedStatement.setString(3, i + "@163.com");
@@ -107,14 +147,14 @@ public class BatchTest {
 			}
 			
 			//若总条数不是批量数值的整数倍, 则还需要再额外的执行一次. 
-			if(100000 % 300 != 0){
+			if(10000 % 300 != 0){
 				preparedStatement.executeBatch();
 				preparedStatement.clearBatch();
 			}
 			
 			long end = System.currentTimeMillis();
 			
-			System.out.println("Time: " + (end - begin)); //569
+			System.out.println("Time: " + (end - begin)); //Time: 12980
 			
 			JDBCTools.commit(connection);
 		} catch (Exception e) {
