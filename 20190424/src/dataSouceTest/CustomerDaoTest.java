@@ -16,28 +16,26 @@ import com.mchange.v2.c3p0.impl.NewPooledConnection;
 public class CustomerDaoTest {
 
 	CustomerDao customerDao = new CustomerDao();
-	
-	
-	
+
 	@Test
 	public void testBatch() {
 		Connection connection = null;
 		try{
 			connection = JDBCTools.getConnection();
-			String sql = "INSERT INTO ajax.customers(name,email) VALUES(?,?)";
+			String sql = "INSERT INTO ajax.customers(name,email,birth) VALUES(?,?,?)";
 			//PreparedStatement preparedStatement = connection.prepareStatement(sql);
-			Object[][] param= new Object[10][2];
-			for(int i=0; i<10; i++){
-				param[i]= new Object[2];
-				param[i][0] = "name"+i*10+0;
-				param[i][1] = "email"+i*10+0;
-				//param[i][2] = new Date(new java.util.Date().getTime());
+			Object[][] param= new Object[10][3];
+			for(int i=0; i < 10; i++){
+				param[i]= new Object[3];
+				param[i][0] = "name_"+i;
+				param[i][1] = "email_"+i;
+				param[i][2] = new Date(new java.util.Date().getTime());
 			}
-
 			customerDao.batch(connection, sql, param);
 			
 		}catch(Exception e){
 			e.printStackTrace();
+			
 		}finally{
 			JDBCTools.release(null, null, connection);
 		}
