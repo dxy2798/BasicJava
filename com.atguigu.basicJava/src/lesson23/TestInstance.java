@@ -3,6 +3,11 @@ package lesson23;
 public class TestInstance {
 	
 	public void method1(Person e){
+		
+		String string = e.getInfo();
+		
+		System.out.println(string);
+		
 		if(e instanceof Graduate){
 			System.out.println("a graduated student");
 			System.out.println("a student");
@@ -25,5 +30,4 @@ public class TestInstance {
 		System.out.println("");
 		t.method1(new Graduate());
 	}
-
 }
