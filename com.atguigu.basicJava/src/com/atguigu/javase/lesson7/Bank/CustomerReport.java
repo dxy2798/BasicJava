@@ -1,4 +1,4 @@
-package lesson28_1;
+package com.atguigu.javase.lesson7.Bank;
 
 import java.util.Iterator;
 
@@ -10,17 +10,23 @@ public class CustomerReport {
 		System.out.println("\t\t\tCUSTOMERS REPORT");
 		System.out.println("\t\t\t=============");
 		
-
+		Iterator<Customer> customerIterator = bank.getCustomers();
 		
-		
-		for(int cust_idx = 0;cust_idx < bank.getNumberOfCustomers();cust_idx++){
-			customer = bank.getCustomer(cust_idx);
+		while(customerIterator.hasNext()){
+//		for(int cust_idx = 0;cust_idx < bank.getNumberOfCustomers();cust_idx++){
+			//customer = bank.getCustomer(cust_idx);
+			customer = customerIterator.next();
 			System.out.println();
 			System.out.println("Customer: "
 					+ customer.getLastName() + ","
 					+ customer.getFirstName());
-			for(int acct_idx = 0; acct_idx < customer.getNumberOfAccounts(); acct_idx++){
-				Account account = customer.getAccount(acct_idx);
+			
+			Iterator<Account> accoutIterator = customer.getAccouts();
+			
+			//for(int acct_idx = 0; acct_idx < customer.getNumberOfAccounts(); acct_idx++){
+			while(accoutIterator.hasNext()){	
+				//Account account = customer.getAccount(acct_idx);
+				Account account = accoutIterator.next();
 				String account_type = "";
 				
 				if(account instanceof SavingAccount){

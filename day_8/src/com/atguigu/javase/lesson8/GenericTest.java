@@ -1,11 +1,15 @@
 package com.atguigu.javase.lesson8;
 
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.junit.Test;
 /**
- * 不适用泛型:
+ * 不使用泛型:
  * 1. 集合中的类型并不安全,可以向集合中放入任何类型的对象.
  * 2. 从集合中取出的对象都是 Object 类型,在具体操作时可能需要进行类型的强制转换.
  * 	     在强制转换时也容易发生 ClassCastException.
@@ -13,6 +17,33 @@ import org.junit.Test;
  */
 public class GenericTest {
 
+	@Test
+	public void testCollectionWithGeneric() {
+
+		Set<Person> persons = new TreeSet<>(new Comparator<Person>() {
+
+			@Override
+			public int compare(Person p1, Person p2) {
+				return p2.getAge() - p1.getAge();
+			}
+		});
+		
+		persons.add(new Person("AA", 16));
+		persons.add(new Person("BB", 13));
+		persons.add(new Person("CC", 11));
+		persons.add(new Person("DD", 18));
+		
+		Iterator<Person> it = persons.iterator();
+		
+		while(it.hasNext()){
+			Person person = it.next();
+			System.out.println(person.getAge());
+		}
+		
+		
+	}
+	
+	
 	@Test
 	public void helloGeneric() {
 		

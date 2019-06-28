@@ -1,0 +1,18 @@
+www.atguigu.com
+hello java
+	@Test
+	public void testReader() throws IOException {
+		//利用字符输入流读取 hello.txt 文档的内容, 输出到控制台
+		Reader reader = new FileReader("hello.txt");
+		
+		char [] buffer = new char[10];
+		int len = 0;
+		
+		while((len = reader.read(buffer)) != -1){
+			for(int i = 0; i < len;i++){
+				System.out.print(buffer[i]);
+			}
+		}
+
+		reader.close();
+	}
