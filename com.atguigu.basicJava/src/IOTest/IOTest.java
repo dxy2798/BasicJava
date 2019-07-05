@@ -35,8 +35,23 @@ public class IOTest {
 	@Test
 	public void testRandomAccessFile2() throws IOException{
 		RandomAccessFile access = new RandomAccessFile("hello.txt", "rw");
-		System.out.println(access.length());
+		// 先读一行
+		String line = access.readLine();
 		
+		// 把第一行后面的内容先读取到一个 byte[] 数组中.
+		byte [] buffer = new byte[(int) (access.length() - line.length())];
+		access.read(buffer);
+		
+		// 移动指针到第一行的后面
+		access.seek(line.length());
+		
+		// 写入要写的字符串
+		access.writeBytes("\nI Love Gongfu...\n");
+		
+		// 再写入先前的内容
+		access.write(buffer);
+		
+		access.close();
 	}
 	
 	

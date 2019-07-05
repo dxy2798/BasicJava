@@ -1,0 +1,88 @@
+1. 关于常用类:
+
+1). String 是一个不可变的字符序列！
+2). StringBuffer, StringBulider 是可变的字符序列.
+    > StringBuffer 是线程安全的,所以效率较低.
+    > StringBuilder 是线程不安全的,效率较高.大部分时间使用 StringBuilder.
+3). Date: 封装了时间和日期.
+4). DateFormat:
+	-SimpleDateFormat
+	如果需要把 Date 类型的对象格式化为一个字符串,或把一个字符串转为一个 Date 对象,
+	则使用 DateFormat.    
+		//1. 调用静态工厂方法来获取 DateFormat 对象.
+		//   传入的参数是日期或时间的样式.
+		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, 
+				DateFormat.LONG);
+		Date date = new Date();
+		// 格式化日期对象的 format 方法.
+		String str = dateFormat.format(date);
+		System.out.println(str);
+		
+		str = "2019年7月4日 上午09时18分42秒";
+		// 解析字符串到日期对象的 parse 方法.
+		Date date2 = dateFormat.parse(str);
+		System.out.println(date2);
+		
+		//创建 SimpleDateFormat 对象.
+		DateFormat dateFormat = 
+				new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+5). Random		
+
+
+2. IO
+1). 类
+InputStream   FileInputStream     BufferedInputStream                       ObjectInputStream 
+OutputStream  FileOutputStream    BufferedOutputStream                      ObjectOutputStream  
+Reader        FileReader          BufferReader          InputStreamReader   
+Writer        FileWriter          BufferWriter          OutputStreamWriter
+
+2). 最常用的方法:
+
+①. 文件的复制.
+  InputStream in = new FileInputStream(fileName);
+  OutputStream out = new FileOutStream(fileName2);
+  
+  byte [] buffer = new byte[1024 * 10];
+  int len = 0;
+  
+  while((len = in.read(buffer)) != -1){
+      out.write(buffer,0,len);
+  }
+  in.close();
+  out.close();
+
+②. 
+  BufferedReader bufferedReader = 
+             new BufferedReader(new InputStreamReader(new FileInputReader(fileName)));
+   
+3). 序列化:
+①.  序列化的意义: 
+②.  如果需要对某个类的对象实现序列化: 则该类需要实现 Serializable 接口. 且该类的所有字段也必须
+          是可被序列化的.
+
+4). RandomAccessFile: 类中有一个指向文件内容的指针. 通过 seek() 方法来移动指针.
+          可以完成对文件的读写操作.        
+
+3. 泛型:
+
+1). 在集合中使用泛型: List<Person> persons = new ArrayList<>();
+          好处: ① 只能放某一类对象; ② 无需强转.
+2). 定义泛型类:  class Dao<T, PK>{}   在泛型类中可以像使用其他类型那样使用泛型类型.
+3). 泛型和继承: 
+①.  List<Object> 不是 List<Person> 的父类！非常重要！
+②.  通配符: List<? extends Object> 可以指向  List<Object> 或 List<Person>
+          注意: 带有通配符的泛型集合中,不能添加除 null 以外的任何元素.
+4). 定义泛型方法: public static <E> E get(E e, Integer id) {...}         
+     
+4. 集合:
+1). Collection
+①.  List: 
+②.  Set:
+
+2). Map:
+
+3). Iterator:
+
+4). Collections, Arrays:
+
+
