@@ -1,22 +1,139 @@
 package com.atguigu.javase.lesson12;
 
+import static org.hamcrest.CoreMatchers.nullValue;
+
 import java.awt.event.FocusEvent;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Date;
 
 import org.junit.Test;
 import org.junit.internal.runners.TestMethod;
+import org.omg.CORBA.StructMember;
+import org.omg.CORBA.portable.InvokeHandler;
 
 public class ReflectionTest {
 
+
+	
+	/**
+	 * 获取当前类的父类
+	 * 直接调用 Class 的 getSuperclass() 方法.
+	 * @throws Exception 
+	 */
+	
+	@Test
+	public void testGetSuperClass() throws Exception{
+		String className ="com.atguigu.javase.lesson12.Student";
+		Class clazz = Class.forName(className);
+		Class superClass = clazz.getSuperclass();
+		System.out.println(superClass.getName());
+	}
+	
+
+	/**
+	 * 
+	 * @param className: 某个类的全类名.
+	 * @param methodName: 类的一个方法的方法名.
+	 * @param args: 调用该方法需要传入的参数.
+	 * @return: 调用方法后的返回值.
+	 * @throws ClassNotFoundException 
+	 * @throws IllegalAccessException 
+	 * @throws InstantiationException 
+	 * @throws SecurityException 
+	 * @throws NoSuchMethodException 
+	 */
+	public Object invoke(String className,String methodName,Object ... args){
+		
+		Object obj = null;
+		
+		try {
+			obj = Class.forName(className).newInstance();
+			return invoke(obj, methodName, args);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+
+		return null;
+	}
+	/**
+	 * 
+	 * @param obj: 方法执行的那个对象.
+	 * @param methodName: 类的一个方法的方法名.该方法也可能是私有方法.
+	 * @param args: 调用该方法需要传入的参数.
+	 * @return: 调用方法后的返回值.
+	 */
+	public Object invoke(Object obj,String methodName,Object ... args){
+		//1. 获取 Method 对象.
+		Class [] parameterTypes = new Class [args.length];
+		
+		for(int i = 0; i < args.length; i++){
+			parameterTypes[i] = args[i].getClass();
+			System.out.println(parameterTypes[i]);
+		}
+		
+		try {
+			Method method = obj.getClass().getMethod(methodName, parameterTypes);
+			//2. 执行 Method 方法.
+			//3. 返回方法的返回值.
+			return method.invoke(obj, args);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
+		
+		return null;
+	}
+	
+	@Test
+	public void testInvoke(){
+		Object obj = new Person();
+		invoke(obj, "setName", "尚硅谷",1);
+		invoke("com.atguigu.javase.lesson12.Person","setName","atguigu", 2);
+	
+		Object result =
+				invoke("java.text.SimpleDateFormat", "format", new Date());
+		System.out.println(result);
+	}
+	
+	
+	
 	/**
 	 * Class 是对一个类的描述.
 	 * 类的属性: Field
 	 * 类的方法: Method
 	 * 类的构造器: Constrctor
+	 * 
+	 * Method: 对应类中的方法.
+	 * 1. 获取 Method:
+	 * 1.1  获取类的方法的数组:Method [] methods2 = clazz.getDeclaredMethods();
+	 * 1.2  获取类的指定的方法:getDeclaredMethod(String name,
+     *                           Class<?>... parameterTypes)
+	 *	   name: 方法名.
+	 * 	   parameterTypes: 方法的参数类型(使用 Class 来描述)的列表.
+	 *     
+	 *     Method method = 
+	 *     		clazz.getDeclaredMethod("setName", String.class);
+	 * 
+	 *     method = 
+	 *          clazz.getDeclaredMethod("setName", String.class,Integer.class);
+	 * 
+	 * 1.3 通过 method 对象执行方法:
+	 * public Object invoke(Object obj,Object... args)
+     *
+     *  obj: 执行哪个对象的方法?
+     *  // method 对应的原方法为:
+     *  public void setName(String name,Integer age) 
+     *  method.invoke(obj, "尚硅谷",12);
+     *  
+     *  
+     *  
+     *  
+	 *  
+	 * 
 	 * @throws ClassNotFoundException 
 	 * @throws SecurityException 
 	 * @throws NoSuchMethodException 
@@ -46,7 +163,7 @@ public class ReflectionTest {
 		
 		//3. 获取指定的方法.
 		Method method = clazz.getDeclaredMethod("setName", String.class);
-				System.out.println(method);
+				System.out.println("+++" + method);
 				
 		method = clazz.getDeclaredMethod("test");		
 		System.out.println(method);
@@ -55,7 +172,6 @@ public class ReflectionTest {
 		System.out.println(method);
 		
 		//4. 执行方法!
-		
 		Object obj = clazz.newInstance();
 		method.invoke(obj, "尚硅谷", 12);
 		

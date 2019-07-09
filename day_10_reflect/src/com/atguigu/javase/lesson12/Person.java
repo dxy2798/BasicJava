@@ -32,13 +32,22 @@ public class Person {
 		System.out.println("Person 的有参数的构造器.");
 	}
 	
+	/**
+	 * 留给反射使用的.
+	 */
 	public Person() {
 		System.out.println("Person 的无参数的构造器.");
 	}
-	@Override
-	public String toString() {
-		return "Person [name=" + name + ", age=" + age + "]";
+	
+	private String method2(){
+		return "private String method2";
 	}
 	
+	private Object method3(String name,Integer age){
+		
+		Person person = new Person(name, age);
+		
+		return person;
+	}
 	
 }
