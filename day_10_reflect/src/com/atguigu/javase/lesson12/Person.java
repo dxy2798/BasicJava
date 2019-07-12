@@ -22,9 +22,12 @@ public class Person {
 	public int getAge() {
 		return age;
 	}
+	
+	@AgeValidator(min=18,max=35)
 	public void setAge(int age) {
 		this.age = age;
 	}
+	
 	public Person(String name, int age) {
 		super();
 		this.name = name;
@@ -36,9 +39,15 @@ public class Person {
 	 * 留给反射使用的.
 	 */
 	public Person() {
-		System.out.println("Person 的无参数的构造器.");
+		//System.out.println("Person 的无参数的构造器.");
 	}
 	
+	
+	@Override
+	public String toString() {
+		return "Person [name=" + name + ", age=" + age + "]";
+	}
+
 	private String method2(){
 		return "private String method2";
 	}
